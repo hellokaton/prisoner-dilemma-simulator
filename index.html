@@ -11,6 +11,161 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+      :root {
+        --primary-color: #4361ee;
+        --primary-light: #5e7ff4;
+        --primary-dark: #3a55d9;
+        --secondary-color: #f72585;
+        --neutral-50: #1e1e24;
+        --neutral-100: #2d2d3a;
+        --neutral-200: #3b3b4c;
+        --neutral-300: #4d4d61;
+        --neutral-700: #d1d1df;
+        --neutral-800: #f1f1f6;
+        --success-color: #4ade80;
+        --error-color: #f43f5e;
+        --background-color: #121218;
+        --card-bg-color: #1e1e24;
+        --border-color: #3b3b4c;
+      }
+
+      body {
+        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+          sans-serif;
+        background-color: var(--background-color);
+        color: var(--neutral-800);
+        line-height: 1.5;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-weight: 600;
+        line-height: 1.3;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.25rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: 1px solid transparent;
+        letter-spacing: 0.015em;
+      }
+
+      .btn:focus {
+        outline: none;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+      }
+
+      .btn-secondary {
+        background-color: var(--neutral-200);
+        color: var(--neutral-700);
+      }
+
+      .btn-secondary:hover {
+        background-color: var(--neutral-300);
+      }
+
+      .card {
+        background-color: var(--card-bg-color);
+        border-radius: 0.25rem;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+      }
+
+      .form-select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--neutral-300);
+        border-radius: 0.25rem;
+        background-color: var(--neutral-50);
+        color: var(--neutral-800);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23d1d1df' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7' /%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1em;
+        padding-right: 2.5rem;
+      }
+
+      .form-select:focus {
+        outline: none;
+        border-color: var(--primary-light);
+      }
+
+      .form-select:hover {
+        border-color: var(--primary-light);
+      }
+
+      .form-radio {
+        appearance: none;
+        width: 1.125rem;
+        height: 1.125rem;
+        color: var(--primary-color);
+        border: 1.5px solid var(--neutral-300);
+        border-radius: 50%;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .form-radio:checked {
+        border-color: var(--primary-color);
+        background-color: var(--neutral-50);
+      }
+
+      .form-radio:checked::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 0.65rem;
+        height: 0.65rem;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+      }
+
+      .form-radio:focus {
+        outline: none;
+      }
+
+      input[type="number"] {
+        appearance: none;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--neutral-300);
+        border-radius: 0.25rem;
+        background-color: var(--neutral-50);
+        color: var(--neutral-800);
+        transition: all 0.2s ease;
+      }
+
+      input[type="number"]:focus {
+        outline: none;
+        border-color: var(--primary-light);
+      }
+
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -19,64 +174,120 @@
           opacity: 1;
         }
       }
+
       .fade-in {
         animation: fadeIn 0.5s ease-in-out;
       }
-      @keyframes pulse {
-        0% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.05);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
-      .pulse {
-        animation: pulse 1s infinite;
-      }
+
       .transition-all {
         transition: all 0.3s ease;
       }
+
       .collapsible-content {
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.5s ease-out;
       }
+
       .collapsible-content.expanded {
         max-height: 2000px;
         transition: max-height 0.5s ease-in;
       }
+
       .history-table-container {
         max-height: 400px;
         overflow-y: auto;
+        border-radius: 0.25rem;
+        border: 1px solid var(--neutral-200);
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary-light) var(--neutral-100);
+      }
+
+      .history-table-container::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .history-table-container::-webkit-scrollbar-track {
+        background: var(--neutral-100);
+      }
+
+      .history-table-container::-webkit-scrollbar-thumb {
+        background-color: var(--primary-light);
+      }
+
+      /* 表格样式 */
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+
+      th {
+        background-color: var(--neutral-100);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--neutral-200);
+      }
+
+      td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--neutral-200);
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      tr:hover {
+        background-color: var(--neutral-50);
+      }
+
+      .icon-cooperate {
+        color: var(--success-color);
+      }
+
+      .icon-defect {
+        color: var(--error-color);
+      }
+
+      .progress-bar {
+        height: 0.5rem;
+        border-radius: 0;
+        overflow: hidden;
+      }
+
+      .progress-bar-fill {
+        height: 100%;
+        transition: width 1s ease;
       }
     </style>
   </head>
-  <body class="bg-gray-100 min-h-screen font-sans">
+  <body class="bg-gray-900 min-h-screen font-sans">
     <div class="container mx-auto px-4 py-8">
-      <header class="mb-10 text-center">
-        <h1 class="text-4xl font-bold text-indigo-700 mb-4">
+      <header class="mb-10">
+        <h1 class="text-4xl font-bold text-blue-400 mb-4">
           囚徒困境策略模拟器
         </h1>
-        <p class="text-gray-600 max-w-2xl mx-auto">
+        <div class="h-1 w-24 bg-blue-500 mb-4"></div>
+        <p class="text-gray-400 max-w-2xl">
           囚徒困境是博弈论中的经典问题，两名参与者面临选择合作还是背叛的决策。通过此模拟器，您可以测试不同的策略并观察长期结果。
         </p>
       </header>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-        <div
-          class="bg-white rounded-lg shadow-lg p-6 transition-all hover:shadow-xl"
-        >
-          <h2 class="text-2xl font-bold text-indigo-600 mb-4">策略配置</h2>
+        <div class="card p-6">
+          <h2 class="text-2xl font-bold text-blue-400 mb-4">策略配置</h2>
+          <div class="h-px w-full bg-gray-700 mb-6"></div>
 
           <div class="mb-6">
-            <h3 class="text-xl font-semibold mb-3">玩家 A 策略</h3>
-            <select
-              id="playerAStrategy"
-              class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
+            <h3 class="text-xl font-semibold mb-3 text-gray-300">
+              玩家 A 策略
+            </h3>
+            <select id="playerAStrategy" class="form-select">
               <option value="alwaysCooperate">始终合作</option>
               <option value="alwaysDefect">始终背叛</option>
               <option value="titForTat" selected>以牙还牙 (Tit for Tat)</option>
@@ -86,11 +297,10 @@
           </div>
 
           <div class="mb-6">
-            <h3 class="text-xl font-semibold mb-3">玩家 B 策略</h3>
-            <select
-              id="playerBStrategy"
-              class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
+            <h3 class="text-xl font-semibold mb-3 text-gray-300">
+              玩家 B 策略
+            </h3>
+            <select id="playerBStrategy" class="form-select">
               <option value="alwaysCooperate">始终合作</option>
               <option value="alwaysDefect" selected>始终背叛</option>
               <option value="titForTat">以牙还牙 (Tit for Tat)</option>
@@ -100,45 +310,53 @@
           </div>
 
           <div class="mb-6">
-            <h3 class="text-xl font-semibold mb-3">回合数</h3>
+            <h3 class="text-xl font-semibold mb-3 text-gray-300">回合数</h3>
             <div class="space-y-3">
-              <div class="flex flex-wrap gap-3">
-                <label class="flex items-center">
+              <div class="flex flex-wrap gap-4">
+                <label
+                  class="flex items-center cursor-pointer px-2 py-1 hover:bg-gray-800 transition-colors"
+                >
                   <input
                     type="radio"
                     name="iterationOption"
                     value="20"
                     checked
-                    class="form-radio h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                    class="form-radio"
                   />
-                  <span class="ml-2 text-gray-700">20回合</span>
+                  <span class="ml-2 text-gray-300">20回合</span>
                 </label>
-                <label class="flex items-center">
+                <label
+                  class="flex items-center cursor-pointer px-2 py-1 hover:bg-gray-800 transition-colors"
+                >
                   <input
                     type="radio"
                     name="iterationOption"
                     value="50"
-                    class="form-radio h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                    class="form-radio"
                   />
-                  <span class="ml-2 text-gray-700">50回合</span>
+                  <span class="ml-2 text-gray-300">50回合</span>
                 </label>
-                <label class="flex items-center">
+                <label
+                  class="flex items-center cursor-pointer px-2 py-1 hover:bg-gray-800 transition-colors"
+                >
                   <input
                     type="radio"
                     name="iterationOption"
                     value="100"
-                    class="form-radio h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                    class="form-radio"
                   />
-                  <span class="ml-2 text-gray-700">100回合</span>
+                  <span class="ml-2 text-gray-300">100回合</span>
                 </label>
-                <label class="flex items-center">
+                <label
+                  class="flex items-center cursor-pointer px-2 py-1 hover:bg-gray-800 transition-colors"
+                >
                   <input
                     type="radio"
                     name="iterationOption"
                     value="custom"
-                    class="form-radio h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                    class="form-radio"
                   />
-                  <span class="ml-2 text-gray-700">自定义</span>
+                  <span class="ml-2 text-gray-300">自定义</span>
                 </label>
               </div>
               <div id="customIterationContainer" class="hidden">
@@ -148,158 +366,119 @@
                   min="5"
                   max="200"
                   value="20"
-                  class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  class="form-select"
                   placeholder="输入回合数 (5-200)"
                 />
               </div>
             </div>
           </div>
 
-          <button
-            id="startSimulation"
-            class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-indigo-700 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
-          >
-            开始模拟
+          <button id="startSimulation" class="btn btn-primary w-full">
+            <i class="fas fa-play mr-2"></i>开始模拟
           </button>
         </div>
 
-        <div
-          class="bg-white rounded-lg shadow-lg p-6 transition-all hover:shadow-xl"
-        >
-          <h2 class="text-2xl font-bold text-indigo-600 mb-4">收益矩阵</h2>
+        <div class="card p-6">
+          <h2 class="text-2xl font-bold text-blue-400 mb-4">收益矩阵</h2>
+          <div class="h-px w-full bg-gray-700 mb-6"></div>
           <div class="overflow-x-auto">
-            <table class="min-w-full bg-white">
+            <table class="min-w-full bg-gray-800 overflow-hidden">
               <thead>
                 <tr>
-                  <th
-                    class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-                  >
-                    玩家 A / 玩家 B
-                  </th>
-                  <th
-                    class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-                  >
-                    合作
-                  </th>
-                  <th
-                    class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-                  >
-                    背叛
-                  </th>
+                  <th>玩家 A / 玩家 B</th>
+                  <th>合作</th>
+                  <th>背叛</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap border-b border-gray-200 font-semibold"
-                  >
-                    合作
-                  </td>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap border-b border-gray-200 text-green-600"
-                  >
-                    A: 3 / B: 3
-                  </td>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap border-b border-gray-200 text-red-600"
-                  >
-                    A: 0 / B: 5
-                  </td>
+                  <td class="font-semibold">合作</td>
+                  <td class="text-green-400 bg-green-900/30">A: 3 / B: 3</td>
+                  <td class="text-red-400 bg-red-900/30">A: 0 / B: 5</td>
                 </tr>
                 <tr>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap border-b border-gray-200 font-semibold"
-                  >
-                    背叛
-                  </td>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap border-b border-gray-200 text-green-600"
-                  >
-                    A: 5 / B: 0
-                  </td>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap border-b border-gray-200 text-red-600"
-                  >
-                    A: 1 / B: 1
-                  </td>
+                  <td class="font-semibold">背叛</td>
+                  <td class="text-green-400 bg-green-900/30">A: 5 / B: 0</td>
+                  <td class="text-red-400 bg-red-900/30">A: 1 / B: 1</td>
                 </tr>
               </tbody>
             </table>
-            <div class="mt-3 bg-indigo-50 p-4 rounded-lg">
-              <h4 class="font-semibold text-indigo-700 mb-2">计分说明：</h4>
+            <div class="mt-4 p-4 bg-gray-800">
+              <h4 class="font-semibold text-blue-400 mb-2">计分说明：</h4>
               <ul class="space-y-2 text-sm">
                 <li class="flex items-start">
                   <div
-                    class="flex-shrink-0 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center mt-0.5 mr-2"
+                    class="flex-shrink-0 w-5 h-5 bg-green-500 rounded-none flex items-center justify-center mt-0.5 mr-2"
                   >
-                    <span class="text-white text-xs font-bold">R</span>
+                    <span class="text-black text-xs font-bold">R</span>
                   </div>
-                  <div>
+                  <div class="text-gray-300">
                     <span class="font-medium">双方合作奖励 (3分)</span
                     >：双方选择合作，各获得中等奖励。
                   </div>
                 </li>
                 <li class="flex items-start">
                   <div
-                    class="flex-shrink-0 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center mt-0.5 mr-2"
+                    class="flex-shrink-0 w-5 h-5 bg-red-500 rounded-none flex items-center justify-center mt-0.5 mr-2"
                   >
-                    <span class="text-white text-xs font-bold">T</span>
+                    <span class="text-black text-xs font-bold">T</span>
                   </div>
-                  <div>
+                  <div class="text-gray-300">
                     <span class="font-medium">背叛者的收益 (5分)</span
                     >：当一方背叛而对方合作时，背叛者获得最高分。
                   </div>
                 </li>
                 <li class="flex items-start">
                   <div
-                    class="flex-shrink-0 w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center mt-0.5 mr-2"
+                    class="flex-shrink-0 w-5 h-5 bg-yellow-500 rounded-none flex items-center justify-center mt-0.5 mr-2"
                   >
-                    <span class="text-white text-xs font-bold">S</span>
+                    <span class="text-black text-xs font-bold">S</span>
                   </div>
-                  <div>
+                  <div class="text-gray-300">
                     <span class="font-medium">受害者的损失 (0分)</span
                     >：当一方选择合作而对方背叛时，合作者得0分。
                   </div>
                 </li>
                 <li class="flex items-start">
                   <div
-                    class="flex-shrink-0 w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mt-0.5 mr-2"
+                    class="flex-shrink-0 w-5 h-5 bg-gray-500 rounded-none flex items-center justify-center mt-0.5 mr-2"
                   >
-                    <span class="text-white text-xs font-bold">P</span>
+                    <span class="text-black text-xs font-bold">P</span>
                   </div>
-                  <div>
+                  <div class="text-gray-300">
                     <span class="font-medium">双方背叛惩罚 (1分)</span
                     >：双方都选择背叛时，均获得较低分数。
                   </div>
                 </li>
               </ul>
-              <p class="mt-3 text-xs text-gray-600">
+              <p class="mt-3 text-xs text-gray-500">
                 注：在经典囚徒困境中，得分必须满足 T > R > P > S 且 2R > T +
                 S，这确保了博弈的困境特性。
               </p>
             </div>
           </div>
           <div class="mt-6">
-            <h3 class="text-xl font-semibold mb-3">策略说明</h3>
-            <ul class="list-disc list-inside space-y-2 text-gray-700">
+            <h3 class="text-xl font-semibold mb-3 text-gray-300">策略说明</h3>
+            <div class="h-px w-full bg-gray-700 mb-3"></div>
+            <ul class="list-disc list-inside space-y-2 text-gray-400">
               <li>
-                <span class="font-semibold">始终合作</span
+                <span class="font-semibold text-gray-300">始终合作</span
                 >：不管对方选择什么，始终选择合作。
               </li>
               <li>
-                <span class="font-semibold">始终背叛</span
+                <span class="font-semibold text-gray-300">始终背叛</span
                 >：不管对方选择什么，始终选择背叛。
               </li>
               <li>
-                <span class="font-semibold">以牙还牙</span
+                <span class="font-semibold text-gray-300">以牙还牙</span
                 >：第一回合选择合作，之后模仿对方上一回合的选择。
               </li>
               <li>
-                <span class="font-semibold">记仇者</span
+                <span class="font-semibold text-gray-300">记仇者</span
                 >：一直选择合作，直到对方背叛后永远选择背叛。
               </li>
               <li>
-                <span class="font-semibold">随机策略</span
+                <span class="font-semibold text-gray-300">随机策略</span
                 >：随机选择合作或背叛。
               </li>
             </ul>
@@ -309,75 +488,89 @@
 
       <div id="simulationResults" class="hidden">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-5">
-          <div
-            class="bg-white rounded-lg shadow-lg p-6 transition-all hover:shadow-xl"
-          >
-            <h2 class="text-2xl font-bold text-indigo-600 mb-4">模拟结果</h2>
+          <div class="card p-6">
+            <h2 class="text-2xl font-bold text-blue-400 mb-4">模拟结果</h2>
+            <div class="h-px w-full bg-gray-700 mb-6"></div>
             <div>
-              <h3 class="text-xl font-semibold mb-3">总分</h3>
-              <div
-                class="flex justify-between items-center p-4 bg-gray-50 rounded-lg mb-4"
-              >
-                <div>
-                  <span class="text-lg font-semibold text-indigo-700"
-                    >玩家 A:</span
-                  >
-                  <span id="playerAScore" class="text-xl font-bold ml-2"
-                    >0</span
-                  >
-                  <span class="text-sm text-gray-500 ml-2"
-                    >(<span id="playerAStrategyDisplay">-</span>)</span
-                  >
-                </div>
-                <div>
-                  <span class="text-lg font-semibold text-indigo-700"
-                    >玩家 B:</span
-                  >
-                  <span id="playerBScore" class="text-xl font-bold ml-2"
-                    >0</span
-                  >
-                  <span class="text-sm text-gray-500 ml-2"
-                    >(<span id="playerBStrategyDisplay">-</span>)</span
-                  >
+              <h3 class="text-xl font-semibold mb-3 text-gray-300">总分</h3>
+              <div class="p-4 bg-gray-800 mb-4">
+                <div class="flex justify-between items-center">
+                  <div>
+                    <span class="text-lg font-semibold text-blue-400"
+                      >玩家 A:</span
+                    >
+                    <span
+                      id="playerAScore"
+                      class="text-xl font-bold ml-2 text-gray-200"
+                      >0</span
+                    >
+                    <span class="text-sm text-gray-500 ml-2"
+                      >(<span id="playerAStrategyDisplay">-</span>)</span
+                    >
+                  </div>
+                  <div>
+                    <span class="text-lg font-semibold text-blue-400"
+                      >玩家 B:</span
+                    >
+                    <span
+                      id="playerBScore"
+                      class="text-xl font-bold ml-2 text-gray-200"
+                      >0</span
+                    >
+                    <span class="text-sm text-gray-500 ml-2"
+                      >(<span id="playerBStrategyDisplay">-</span>)</span
+                    >
+                  </div>
                 </div>
               </div>
               <div class="mb-4">
                 <div class="flex justify-between mb-1">
-                  <span class="text-sm font-semibold">胜者:</span>
-                  <span id="winner" class="text-sm font-bold">-</span>
+                  <span class="text-sm font-semibold text-gray-300">胜者:</span>
+                  <span id="winner" class="text-sm font-bold text-gray-200"
+                    >-</span
+                  >
                 </div>
               </div>
             </div>
             <div>
-              <h3 class="text-xl font-semibold mb-3">当前回合</h3>
-              <div id="currentRound" class="p-4 bg-gray-50 rounded-lg">
+              <h3 class="text-xl font-semibold mb-3 text-gray-300">当前回合</h3>
+              <div class="h-px w-full bg-gray-700 mb-3"></div>
+              <div id="currentRound" class="p-4 bg-gray-800">
                 <div class="grid grid-cols-2 gap-4">
-                  <div class="flex flex-col items-center">
-                    <span class="text-lg font-semibold text-indigo-700 mb-2"
+                  <div
+                    class="flex flex-col items-center p-3 bg-gray-900 border border-gray-700"
+                  >
+                    <span class="text-lg font-semibold text-blue-400 mb-2"
                       >玩家 A
                       <span class="text-sm text-gray-500"
                         >(<span id="playerAStrategyDisplaySmall">-</span>)</span
                       ></span
                     >
                     <div id="playerACurrentChoice" class="text-4xl mb-2">-</div>
-                    <span id="playerACurrentScore" class="text-xl font-bold"
+                    <span
+                      id="playerACurrentScore"
+                      class="text-xl font-bold text-gray-200"
                       >+0</span
                     >
                   </div>
-                  <div class="flex flex-col items-center">
-                    <span class="text-lg font-semibold text-indigo-700 mb-2"
+                  <div
+                    class="flex flex-col items-center p-3 bg-gray-900 border border-gray-700"
+                  >
+                    <span class="text-lg font-semibold text-blue-400 mb-2"
                       >玩家 B
                       <span class="text-sm text-gray-500"
                         >(<span id="playerBStrategyDisplaySmall">-</span>)</span
                       ></span
                     >
                     <div id="playerBCurrentChoice" class="text-4xl mb-2">-</div>
-                    <span id="playerBCurrentScore" class="text-xl font-bold"
+                    <span
+                      id="playerBCurrentScore"
+                      class="text-xl font-bold text-gray-200"
                       >+0</span
                     >
                   </div>
                 </div>
-                <div class="mt-4 text-center">
+                <div class="mt-4 text-center text-gray-300">
                   <span class="font-semibold">回合:</span>
                   <span id="currentRoundNumber" class="font-bold ml-2">0</span>
                   /
@@ -387,10 +580,9 @@
             </div>
           </div>
 
-          <div
-            class="bg-white rounded-lg shadow-lg p-6 transition-all hover:shadow-xl"
-          >
-            <h2 class="text-2xl font-bold text-indigo-600 mb-4">得分走势图</h2>
+          <div class="card p-6">
+            <h2 class="text-2xl font-bold text-blue-400 mb-4">得分走势图</h2>
+            <div class="h-px w-full bg-gray-700 mb-6"></div>
             <div class="h-80">
               <canvas id="scoreChart"></canvas>
             </div>
@@ -400,7 +592,7 @@
         <div class="flex justify-center mb-5">
           <button
             id="toggleDetails"
-            class="flex items-center justify-center bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-4 py-2 rounded-lg transition-all"
+            class="btn btn-secondary flex items-center justify-center"
           >
             <span>查看详细信息</span>
             <i id="toggleIcon" class="fas fa-chevron-down ml-2"></i>
@@ -409,64 +601,63 @@
 
         <div id="detailsSection" class="collapsible-content">
           <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
-            <div
-              class="bg-white rounded-lg shadow-lg p-6 transition-all hover:shadow-xl"
-            >
-              <h2 class="text-2xl font-bold text-indigo-600 mb-4">选择比例</h2>
+            <div class="card p-6">
+              <h2 class="text-2xl font-bold text-blue-400 mb-4">选择比例</h2>
+              <div class="h-px w-full bg-gray-700 mb-6"></div>
               <div class="grid grid-cols-2 gap-4">
-                <div class="p-4 bg-gray-50 rounded-lg">
-                  <h4 class="font-semibold text-indigo-700 mb-2">玩家 A</h4>
+                <div class="p-4 bg-gray-800">
+                  <h4 class="font-semibold text-blue-400 mb-2">玩家 A</h4>
                   <div class="mb-2">
-                    <div class="flex justify-between">
+                    <div class="flex justify-between text-gray-300">
                       <span>合作:</span>
                       <span id="playerACooperatePercent">0%</span>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div class="progress-bar bg-gray-700 mt-1">
                       <div
                         id="playerACooperateBar"
-                        class="bg-green-600 h-2.5 rounded-full"
+                        class="progress-bar-fill bg-green-600"
                         style="width: 0%"
                       ></div>
                     </div>
                   </div>
                   <div>
-                    <div class="flex justify-between">
+                    <div class="flex justify-between text-gray-300">
                       <span>背叛:</span>
                       <span id="playerADefectPercent">0%</span>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div class="progress-bar bg-gray-700 mt-1">
                       <div
                         id="playerADefectBar"
-                        class="bg-red-600 h-2.5 rounded-full"
+                        class="progress-bar-fill bg-red-600"
                         style="width: 0%"
                       ></div>
                     </div>
                   </div>
                 </div>
-                <div class="p-4 bg-gray-50 rounded-lg">
-                  <h4 class="font-semibold text-indigo-700 mb-2">玩家 B</h4>
+                <div class="p-4 bg-gray-800">
+                  <h4 class="font-semibold text-blue-400 mb-2">玩家 B</h4>
                   <div class="mb-2">
-                    <div class="flex justify-between">
+                    <div class="flex justify-between text-gray-300">
                       <span>合作:</span>
                       <span id="playerBCooperatePercent">0%</span>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div class="progress-bar bg-gray-700 mt-1">
                       <div
                         id="playerBCooperateBar"
-                        class="bg-green-600 h-2.5 rounded-full"
+                        class="progress-bar-fill bg-green-600"
                         style="width: 0%"
                       ></div>
                     </div>
                   </div>
                   <div>
-                    <div class="flex justify-between">
+                    <div class="flex justify-between text-gray-300">
                       <span>背叛:</span>
                       <span id="playerBDefectPercent">0%</span>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div class="progress-bar bg-gray-700 mt-1">
                       <div
                         id="playerBDefectBar"
-                        class="bg-red-600 h-2.5 rounded-full"
+                        class="progress-bar-fill bg-red-600"
                         style="width: 0%"
                       ></div>
                     </div>
@@ -475,58 +666,33 @@
               </div>
             </div>
 
-            <div
-              class="md:col-span-3 bg-white rounded-lg shadow-lg p-6 transition-all hover:shadow-xl"
-            >
+            <div class="md:col-span-3 card p-6">
               <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold text-indigo-600">回合历史</h2>
+                <h2 class="text-2xl font-bold text-blue-400">回合历史</h2>
                 <button
                   id="scrollToCurrentRound"
-                  class="flex items-center justify-center bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-3 py-1 rounded transition-all text-sm"
+                  class="btn btn-secondary text-sm py-1.5 px-3"
                 >
                   <i class="fas fa-search mr-1"></i>
                   <span>跳转到当前回合</span>
                 </button>
               </div>
+              <div class="h-px w-full bg-gray-700 mb-6"></div>
               <div class="history-table-container">
-                <table class="min-w-full divide-y divide-gray-200">
-                  <thead class="bg-gray-50 sticky top-0">
+                <table class="min-w-full divide-y divide-gray-700">
+                  <thead class="bg-gray-800 sticky top-0">
                     <tr>
-                      <th
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        回合
-                      </th>
-                      <th
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        玩家 A 选择
-                      </th>
-                      <th
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        玩家 B 选择
-                      </th>
-                      <th
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        玩家 A 得分
-                      </th>
-                      <th
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        玩家 B 得分
-                      </th>
-                      <th
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        累计得分 (A/B)
-                      </th>
+                      <th>回合</th>
+                      <th>玩家 A 选择</th>
+                      <th>玩家 B 选择</th>
+                      <th>玩家 A 得分</th>
+                      <th>玩家 B 得分</th>
+                      <th>累计得分 (A/B)</th>
                     </tr>
                   </thead>
                   <tbody
                     id="historyTableBody"
-                    class="bg-white divide-y divide-gray-200"
+                    class="bg-gray-900 divide-y divide-gray-700"
                   >
                     <!-- 回合历史将在这里动态填充 -->
                   </tbody>
@@ -537,9 +703,10 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-lg shadow-lg p-6">
-        <h2 class="text-2xl font-bold text-indigo-600 mb-4">关于囚徒困境</h2>
-        <div class="prose max-w-none">
+      <div class="card p-6">
+        <h2 class="text-2xl font-bold text-blue-400 mb-4">关于囚徒困境</h2>
+        <div class="h-px w-full bg-gray-700 mb-6"></div>
+        <div class="prose max-w-none text-gray-300">
           <p>
             囚徒困境是博弈论中的一个基本问题，展示了为什么两个完全理性的个体可能不会合作，即使合作对双方都有利。
           </p>
@@ -568,8 +735,9 @@
       </div>
     </div>
 
-    <footer class="bg-gray-800 text-white py-6 mt-10">
-      <div class="container mx-auto px-4 text-center">
+    <footer class="bg-gray-900 text-white py-6 mt-10 border-t border-gray-800">
+      <div class="container mx-auto px-4">
+        <div class="h-px w-full bg-gray-800 mb-6"></div>
         <p>囚徒困境策略模拟器 &copy; 2023</p>
         <p class="text-gray-400 text-sm mt-2">
           本模拟器仅用于教育目的，展示博弈论中的经典问题及其解决策略。
@@ -578,5 +746,14 @@
     </footer>
 
     <script src="script.js"></script>
+
+    <script>
+      // 为暗色模式调整 Chart.js 配置
+      document.addEventListener("DOMContentLoaded", function () {
+        Chart.defaults.color = "#d1d1df";
+        Chart.defaults.borderColor = "#3b3b4c";
+        Chart.defaults.backgroundColor = "#1e1e24";
+      });
+    </script>
   </body>
 </html>

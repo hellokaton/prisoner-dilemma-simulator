@@ -60,6 +60,12 @@ const strategyNames = {
   random: "随机策略",
 };
 
+// 选择图标
+const choiceIcons = {
+  cooperate: '<i class="fas fa-handshake icon-cooperate"></i>',
+  defect: '<i class="fas fa-thumbs-down icon-defect"></i>',
+};
+
 // 界面元素
 document.addEventListener("DOMContentLoaded", () => {
   const playerAStrategySelect = document.getElementById("playerAStrategy");
@@ -119,40 +125,56 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // 显示策略名称
-    document.getElementById("playerAStrategyDisplay").textContent =
-      strategyNames[playerAStrategy];
-    document.getElementById("playerBStrategyDisplay").textContent =
-      strategyNames[playerBStrategy];
-    document.getElementById("playerAStrategyDisplaySmall").textContent =
-      strategyNames[playerAStrategy];
-    document.getElementById("playerBStrategyDisplaySmall").textContent =
-      strategyNames[playerBStrategy];
+    // 按钮加载态
+    startSimulationButton.innerHTML =
+      '<i class="fas fa-spinner fa-spin mr-2"></i> 模拟中...';
+    startSimulationButton.disabled = true;
 
-    // 执行模拟
-    const results = runSimulation(playerAStrategy, playerBStrategy, iterations);
+    // 延迟一点执行，以显示加载状态
+    setTimeout(() => {
+      // 重置显示
+      resetSimulationDisplay();
 
-    // 重置显示
-    resetSimulationDisplay();
+      // 显示策略名称 - 将此部分移动到重置后
+      document.getElementById("playerAStrategyDisplay").textContent =
+        strategyNames[playerAStrategy];
+      document.getElementById("playerBStrategyDisplay").textContent =
+        strategyNames[playerBStrategy];
+      document.getElementById("playerAStrategyDisplaySmall").textContent =
+        strategyNames[playerAStrategy];
+      document.getElementById("playerBStrategyDisplaySmall").textContent =
+        strategyNames[playerBStrategy];
 
-    // 显示结果区域
-    simulationResults.classList.remove("hidden");
-    simulationResults.classList.add("fade-in");
+      // 执行模拟
+      const results = runSimulation(
+        playerAStrategy,
+        playerBStrategy,
+        iterations
+      );
 
-    // 滚动到结果区域
-    simulationResults.scrollIntoView({ behavior: "smooth" });
+      // 显示结果区域
+      simulationResults.classList.remove("hidden");
+      simulationResults.classList.add("fade-in");
 
-    // 初始状态下折叠详细信息
-    detailsSection.classList.remove("expanded");
-    toggleIcon.classList.remove("fa-chevron-up");
-    toggleIcon.classList.add("fa-chevron-down");
-    toggleDetailsButton.querySelector("span").textContent = "查看详细信息";
+      // 滚动到结果区域
+      simulationResults.scrollIntoView({ behavior: "smooth", block: "start" });
 
-    // 动画显示每回合结果
-    animateSimulation(results);
+      // 初始状态下折叠详细信息
+      detailsSection.classList.remove("expanded");
+      toggleIcon.classList.remove("fa-chevron-up");
+      toggleIcon.classList.add("fa-chevron-down");
+      toggleDetailsButton.querySelector("span").textContent = "查看详细信息";
 
-    // 生成历史表格
-    generateHistoryTable(results);
+      // 动画显示每回合结果
+      animateSimulation(results);
+
+      // 生成历史表格
+      generateHistoryTable(results);
+
+      // 恢复按钮状态
+      startSimulationButton.innerHTML = "开始模拟";
+      startSimulationButton.disabled = false;
+    }, 300);
   });
 
   // 展开/折叠详细信息
@@ -225,9 +247,9 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             // 添加一个短暂的高亮效果
-            highlightedRow.classList.add("bg-indigo-200");
+            highlightedRow.classList.add("bg-indigo-100");
             setTimeout(() => {
-              highlightedRow.classList.remove("bg-indigo-200");
+              highlightedRow.classList.remove("bg-indigo-100");
             }, 1000);
           }
         }
@@ -241,13 +263,18 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       startButton.classList.remove("pulse");
     }, 2000);
-  }, 3000);
+  }, 1500);
 });
 
 // 初始化图表
 function initCharts() {
   // 创建得分走势图
   const scoreCtx = document.getElementById("scoreChart").getContext("2d");
+
+  // 自定义图表样式
+  Chart.defaults.font.family = "'Inter', sans-serif";
+  Chart.defaults.color = "#4b5563";
+
   scoreChart = new Chart(scoreCtx, {
     type: "line",
     data: {
@@ -256,18 +283,24 @@ function initCharts() {
         {
           label: "玩家 A 得分",
           data: [],
-          borderColor: "rgb(79, 70, 229)",
-          backgroundColor: "rgba(79, 70, 229, 0.1)",
-          tension: 0.1,
-          fill: false,
+          borderColor: "#6366f1",
+          backgroundColor: "rgba(99, 102, 241, 0.1)",
+          tension: 0.3,
+          fill: true,
+          borderWidth: 2,
+          pointRadius: 3,
+          pointHoverRadius: 5,
         },
         {
           label: "玩家 B 得分",
           data: [],
-          borderColor: "rgb(220, 38, 38)",
-          backgroundColor: "rgba(220, 38, 38, 0.1)",
-          tension: 0.1,
-          fill: false,
+          borderColor: "#f43f5e",
+          backgroundColor: "rgba(244, 63, 94, 0.05)",
+          tension: 0.3,
+          fill: true,
+          borderWidth: 2,
+          pointRadius: 3,
+          pointHoverRadius: 5,
         },
       ],
     },
@@ -277,29 +310,87 @@ function initCharts() {
       plugins: {
         legend: {
           position: "top",
+          labels: {
+            padding: 15,
+            usePointStyle: true,
+            boxWidth: 6,
+          },
         },
         tooltip: {
           mode: "index",
           intersect: false,
+          backgroundColor: "rgba(255, 255, 255, 0.9)",
+          titleColor: "#1f2937",
+          bodyColor: "#4b5563",
+          borderColor: "#e5e7eb",
+          borderWidth: 1,
+          padding: 10,
+          cornerRadius: 4,
+          boxPadding: 4,
+          titleFont: {
+            weight: "600",
+          },
+          callbacks: {
+            label: function (context) {
+              return `${context.dataset.label}: ${context.formattedValue} 分`;
+            },
+          },
         },
       },
       scales: {
         y: {
           beginAtZero: true,
+          grid: {
+            color: "rgba(229, 231, 235, 0.5)",
+            drawBorder: false,
+          },
           title: {
             display: true,
             text: "累计得分",
+            font: {
+              size: 12,
+              weight: "500",
+            },
+            padding: {
+              bottom: 10,
+            },
+          },
+          ticks: {
+            padding: 8,
           },
         },
         x: {
+          grid: {
+            display: false,
+            drawBorder: false,
+          },
           title: {
             display: true,
             text: "回合",
+            font: {
+              size: 12,
+              weight: "500",
+            },
+            padding: {
+              top: 10,
+            },
+          },
+          ticks: {
+            padding: 10,
           },
         },
       },
       animation: {
-        duration: 500,
+        duration: 700,
+        easing: "easeOutQuart",
+      },
+      elements: {
+        line: {
+          capBezierPoints: true,
+        },
+      },
+      layout: {
+        padding: 10,
       },
     },
   });
@@ -369,12 +460,6 @@ function resetSimulationDisplay() {
   document.getElementById("playerAScore").textContent = "0";
   document.getElementById("playerBScore").textContent = "0";
   document.getElementById("winner").textContent = "-";
-
-  // 重置策略显示
-  document.getElementById("playerAStrategyDisplay").textContent = "-";
-  document.getElementById("playerBStrategyDisplay").textContent = "-";
-  document.getElementById("playerAStrategyDisplaySmall").textContent = "-";
-  document.getElementById("playerBStrategyDisplaySmall").textContent = "-";
 
   // 重置当前回合显示
   document.getElementById("playerACurrentChoice").innerHTML = "-";
@@ -446,41 +531,33 @@ function generateHistoryTable(results) {
 
     // 回合数
     const roundCell = document.createElement("td");
-    roundCell.className = "px-6 py-4 whitespace-nowrap";
     roundCell.textContent = round.round;
     row.appendChild(roundCell);
 
     // 玩家A选择
     const choiceACell = document.createElement("td");
-    choiceACell.className = "px-6 py-4 whitespace-nowrap";
     const choiceAIcon = document.createElement("span");
     if (round.choices[0] === "cooperate") {
-      choiceAIcon.className = "text-green-500";
-      choiceAIcon.innerHTML = '<i class="fas fa-handshake mr-2"></i>合作';
+      choiceAIcon.innerHTML = choiceIcons.cooperate + " 合作";
     } else {
-      choiceAIcon.className = "text-red-500";
-      choiceAIcon.innerHTML = '<i class="fas fa-thumbs-down mr-2"></i>背叛';
+      choiceAIcon.innerHTML = choiceIcons.defect + " 背叛";
     }
     choiceACell.appendChild(choiceAIcon);
     row.appendChild(choiceACell);
 
     // 玩家B选择
     const choiceBCell = document.createElement("td");
-    choiceBCell.className = "px-6 py-4 whitespace-nowrap";
     const choiceBIcon = document.createElement("span");
     if (round.choices[1] === "cooperate") {
-      choiceBIcon.className = "text-green-500";
-      choiceBIcon.innerHTML = '<i class="fas fa-handshake mr-2"></i>合作';
+      choiceBIcon.innerHTML = choiceIcons.cooperate + " 合作";
     } else {
-      choiceBIcon.className = "text-red-500";
-      choiceBIcon.innerHTML = '<i class="fas fa-thumbs-down mr-2"></i>背叛';
+      choiceBIcon.innerHTML = choiceIcons.defect + " 背叛";
     }
     choiceBCell.appendChild(choiceBIcon);
     row.appendChild(choiceBCell);
 
     // 玩家A得分
     const scoreACell = document.createElement("td");
-    scoreACell.className = "px-6 py-4 whitespace-nowrap";
     scoreACell.textContent = `+${round.scores[0]}`;
     if (round.scores[0] >= 3) {
       scoreACell.classList.add("text-green-600", "font-bold");
@@ -491,7 +568,6 @@ function generateHistoryTable(results) {
 
     // 玩家B得分
     const scoreBCell = document.createElement("td");
-    scoreBCell.className = "px-6 py-4 whitespace-nowrap";
     scoreBCell.textContent = `+${round.scores[1]}`;
     if (round.scores[1] >= 3) {
       scoreBCell.classList.add("text-green-600", "font-bold");
@@ -502,7 +578,7 @@ function generateHistoryTable(results) {
 
     // 累计得分
     const cumulativeScoreCell = document.createElement("td");
-    cumulativeScoreCell.className = "px-6 py-4 whitespace-nowrap font-bold";
+    cumulativeScoreCell.className = "font-bold";
     cumulativeScoreCell.textContent = `${round.cumulativeScores[0]} / ${round.cumulativeScores[1]}`;
     if (round.cumulativeScores[0] > round.cumulativeScores[1]) {
       cumulativeScoreCell.classList.add("text-indigo-600");
@@ -530,6 +606,9 @@ function animateSimulation(results) {
   const playerBScoreDisplay = document.getElementById("playerBScore");
   const winnerDisplay = document.getElementById("winner");
 
+  // 显示总结果中的比例
+  displayResults(results);
+
   // 清空总分
   let currentPlayerAScore = 0;
   let currentPlayerBScore = 0;
@@ -556,13 +635,13 @@ function animateSimulation(results) {
     // 更新选择图标
     playerACurrentChoice.innerHTML =
       round.choices[0] === "cooperate"
-        ? '<i class="fas fa-handshake text-green-500"></i>'
-        : '<i class="fas fa-thumbs-down text-red-500"></i>';
+        ? choiceIcons.cooperate
+        : choiceIcons.defect;
 
     playerBCurrentChoice.innerHTML =
       round.choices[1] === "cooperate"
-        ? '<i class="fas fa-handshake text-green-500"></i>'
-        : '<i class="fas fa-thumbs-down text-red-500"></i>';
+        ? choiceIcons.cooperate
+        : choiceIcons.defect;
 
     // 更新当前得分
     playerACurrentScore.textContent = `+${round.scores[0]}`;
@@ -627,12 +706,6 @@ function highlightCurrentRow(roundNumber) {
   // 当前回合高亮
   if (rows.length >= roundNumber) {
     rows[roundNumber - 1].classList.add("bg-indigo-50");
-
-    // 移除自动滚动逻辑，让用户可以自由控制滚动位置
-    // rows[roundNumber - 1].scrollIntoView({
-    //   behavior: "smooth",
-    //   block: "center",
-    // });
   }
 }
 
